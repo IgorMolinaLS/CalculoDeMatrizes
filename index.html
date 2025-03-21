@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="header">
+      <div class="inputContainerDiv">
+        <div class="inputContainer">
+          <label for="matrix1Size">Insira o tamanho da primeira matriz</label>
+          <div class="matrixSizeContainer">
+            <input
+              type="text"
+              min="2"
+              max="10"
+              maxlength="2"
+              name="matrixRowSize"
+              id="matrix1Rows"
+            />
+            <input
+              type="text"
+              min="2"
+              max="10"
+              maxlength="2"
+              name="matrixColunmSize"
+              id="matrix1Columns"
+            />
+          </div>
+        </div>
+        <div class="inputContainer">
+          <label for="operator">Insira o operador</label>
+          <input
+            type="text"
+            name="operator"
+            id="operator"
+            pattern="^[\+\-\*\/]$"
+          />
+        </div>
+        <div class="inputContainer">
+          <label for="matrix2Size">Insira o tamanho da segunda matriz</label>
+          <div class="matrixSizeContainer">
+            <input
+              type="text"
+              min="2"
+              max="10"
+              maxlength="2"
+              name="matrixRowSize"
+              id="matrix2Rows"
+            />
+            <input
+              type="text"
+              min="2"
+              max="10"
+              maxlength="2"
+              name="matrixColunmSize"
+              id="matrix2Columns"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="buttonDiv">
+        <button id="generateMatrixButton">Gerar matrizes</button>
+      </div>
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>
