@@ -88,8 +88,14 @@ function mountMatrix(matrixSizes, operator) {
   }
 
   let operatorContainer = document.querySelector(".operatorContainer");
-  let operatorValue = document.createElement("p");
+  let equalsContainer = document.querySelector(".equalsContainer");
+  if (operatorContainer.lastElementChild) {
+    operatorContainer.removeChild(operatorContainer.lastElementChild);
+  }
+  const operatorValue = document.createElement("p");
   operatorValue.innerHTML = operator;
+  operatorContainer.style.display = "flex";
+  equalsContainer.style.display = "flex";
   operatorContainer.append(operatorValue);
 
   let matrix2Container = document.querySelector(".matrix2Container");
