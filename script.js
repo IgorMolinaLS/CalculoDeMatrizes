@@ -1,4 +1,5 @@
 let generateMatrixButton = document.querySelector("#generateMatrixButton");
+let generateResultButton = document.querySelector("#equalsButton");
 
 generateMatrixButton.addEventListener("click", () => {
   let matrixSizes = getMatrixSizes();
@@ -94,16 +95,17 @@ function checkMatrixSizesCompatibility(matrixSizes, operator) {
   return areSizesCompatible;
 }
 
-function createMatrix(matrixRows, matrixColumns, id) {
+function createMatrix(matrixRows, matrixColumns, id, classList = "matrixRowDiv") {
   let matrixContainer = document.querySelector(id);
 
   for (let i = 0; i < matrixRows; i++) {
     let newRow = document.createElement("div");
-    newRow.classList.add("matrixRowDiv");
+    newRow.classList.add(classList);
     for (let j = 0; j < matrixColumns; j++) {
       let newColumn = document.createElement("input");
       newColumn.classList.add("matrixInput");
       newRow.append(newColumn);
+      newColumn.value = j;
     }
     matrixContainer.append(newRow);
   }
@@ -147,10 +149,47 @@ function mountMatrix(matrixSizes, operator) {
   switch (operator) {
     case "+":
     case "-":
-      createMatrix(matrix1Columns, matrix1Rows, ".resultMatrix");
+      createMatrix(matrix1Rows, matrix1Columns, ".resultMatrix", "resultMatrixRowDiv");
       break;
     case "*":
-      createMatrix(matrix1Rows, matrix2Columns, ".resultMatrix");
+      createMatrix(matrix1Rows, matrix2Columns, ".resultMatrix", "resultMatrixRowDiv");
       break;
+  }
+}
+
+generateResultButton.addEventListener("click", () => {
+  calculateMatrix();
+});
+
+function calculateMatrix() {
+  let matrix1Container = document.querySelector(".matrix1Container");
+  let matrix2Container = document.querySelector(".matrix2Container");
+  let matrix1Values = [];
+  let matrix2Values = [];
+  
+  matrix1Container.childNodes.forEach((row) => {
+    let rowValues = [];
+    row.childNodes.forEach((column) => {
+      rowValues.push(column.value);
+    });
+    matrix1Values.push(rowValues);
+  });
+
+  matrix2Container.childNodes.forEach((row) => {
+    let rowValues = [];
+    row.childNodes.forEach((column) => {
+      rowValues.push(column.value);
+    });
+    matrix2Values.push(rowValues);
+  });
+
+  if(document.querySelector("#operator").value == "+" || document.querySelector("#operator").value == "-"){
+    for (let i = 0; i < matrix1Values.length; i++) {
+      let row = document.querySelector(`.resultMatrix div:nth-child(${i+1})`);
+      for (let j = 0; j < matrix1Values[i].length; j++) {
+        let column = row.querySelector(`.resultMatrixRowDiv input:nth-child(${j+1})`)
+        column.value = Number(matrix1Values[i][j]) + Number(matrix2Values[i][j])
+      }
+    }
   }
 }
