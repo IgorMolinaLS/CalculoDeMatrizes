@@ -4,12 +4,14 @@ generateMatrixButton.addEventListener("click", () => {
   let matrixSizes = getMatrixSizes();
   let operator = getOperator();
   let matrixSizesOk;
+  let sizeCompatiblityOk;
 
   if (matrixSizes) {
     matrixSizesOk = checkMatrixSizes(matrixSizes);
+    sizeCompatiblityOk = checkMatrixSizesCompatibility(matrixSizes, operator);
   }
 
-  if (operator && matrixSizesOk) {
+  if (operator && matrixSizesOk && sizeCompatiblityOk) {
     mountMatrix(matrixSizes, operator);
   }
 });
@@ -32,21 +34,6 @@ function getMatrixSizes() {
   return matrixSizes;
 }
 
-function checkMatrixSizes(matrixSizes) {
-  let isSizeOk = true;
-  for (let i = 0; i < matrixSizes.length; i++) {
-    if (matrixSizes[i] < 2 || matrixSizes[i] > 5) {
-      isSizeOk = false;
-    }
-  }
-  if (!isSizeOk) {
-    alert(
-      "Insira uma matriz com no mínimo 2 linhas e 2 colunas, e no máximo 5 linhas e 5 colunas"
-    );
-  }
-  return isSizeOk;
-}
-
 function getOperator() {
   let operator = document.querySelector("#operator");
   let operatorValue = operator.value;
@@ -64,7 +51,63 @@ function getOperator() {
   }
 }
 
-//TODO:
+function checkMatrixSizes(matrixSizes) {
+  let isSizeOk = true;
+  for (let i = 0; i < matrixSizes.length; i++) {
+    if (matrixSizes[i] < 2 || matrixSizes[i] > 5) {
+      isSizeOk = false;
+    }
+  }
+  if (!isSizeOk) {
+    alert(
+      "Insira uma matriz com no mínimo 2 linhas e 2 colunas, e no máximo 5 linhas e 5 colunas"
+    );
+  }
+  return isSizeOk;
+}
+
+function checkMatrixSizesCompatibility(matrixSizes, operator) {
+  let areSizesCompatible = true;
+
+  switch (operator) {
+    case "+":
+    case "-":
+      if (
+        matrixSizes[0] != matrixSizes[2] ||
+        matrixSizes[1] != matrixSizes[3]
+      ) {
+        areSizesCompatible = false;
+        alert(
+          "Para realizar as operações de soma ou subtração, é necessário que as matrizes tenham o mesmo tamanho"
+        );
+      }
+      break;
+    case "*":
+      if (matrixSizes[1] != matrixSizes[2]) {
+        areSizesCompatible = false;
+        alert(
+          "O número de colunas da primeira matriz deve ser igual número de linhas da segunda matriz."
+        );
+      }
+      break;
+  }
+  return areSizesCompatible;
+}
+
+function createMatrix(matrixRows, matrixColumns, id) {
+  let matrixContainer = document.querySelector(id);
+
+  for (let i = 0; i < matrixRows; i++) {
+    let newRow = document.createElement("div");
+    newRow.classList.add("matrixRowDiv");
+    for (let j = 0; j < matrixColumns; j++) {
+      let newColumn = document.createElement("input");
+      newColumn.classList.add("matrixInput");
+      newRow.append(newColumn);
+    }
+    matrixContainer.append(newRow);
+  }
+}
 
 function mountMatrix(matrixSizes, operator) {
   let matrix1Rows = matrixSizes[0];
@@ -76,16 +119,8 @@ function mountMatrix(matrixSizes, operator) {
   while (matrix1Container.lastElementChild) {
     matrix1Container.removeChild(matrix1Container.lastElementChild);
   }
-  for (let i = 0; i < matrix1Rows; i++) {
-    let newRow = document.createElement("div");
-    newRow.classList.add("matrixRowDiv");
-    for (let j = 0; j < matrix1Columns; j++) {
-      let newColumn = document.createElement("input");
-      newColumn.classList.add("matrixInput");
-      newRow.append(newColumn);
-    }
-    matrix1Container.append(newRow);
-  }
+
+  createMatrix(matrix1Rows, matrix1Columns, ".matrix1Container");
 
   let operatorContainer = document.querySelector(".operatorContainer");
   let equalsContainer = document.querySelector(".equalsContainer");
@@ -102,29 +137,20 @@ function mountMatrix(matrixSizes, operator) {
   while (matrix2Container.lastElementChild) {
     matrix2Container.removeChild(matrix2Container.lastElementChild);
   }
-  for (let i = 0; i < matrix2Rows; i++) {
-    let newRow = document.createElement("div");
-    newRow.classList.add("matrixRowDiv");
-    for (let j = 0; j < matrix2Columns; j++) {
-      let newColumn = document.createElement("input");
-      newColumn.classList.add("matrixInput");
-      newRow.append(newColumn);
-    }
-    matrix2Container.append(newRow);
-  }
+  createMatrix(matrix2Rows, matrix2Columns, ".matrix2Container");
 
   let resultMatrix = document.querySelector(".resultMatrix");
   while (resultMatrix.lastElementChild) {
     resultMatrix.removeChild(resultMatrix.lastElementChild);
   }
-  for (let i = 0; i < matrix2Rows; i++) {
-    let newRow = document.createElement("div");
-    newRow.classList.add("matrixRowDiv");
-    for (let j = 0; j < matrix2Columns; j++) {
-      let newColumn = document.createElement("input");
-      newColumn.classList.add("matrixInput");
-      newRow.append(newColumn);
-    }
-    resultMatrix.append(newRow);
+
+  switch (operator) {
+    case "+":
+    case "-":
+      createMatrix(matrix1Columns, matrix1Rows, ".resultMatrix");
+      break;
+    case "*":
+      createMatrix(matrix1Rows, matrix2Columns, ".resultMatrix");
+      break;
   }
 }
