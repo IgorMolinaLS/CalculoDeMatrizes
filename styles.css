@@ -1,4 +1,4 @@
-body ,
+body,
 html {
   margin: 0;
   padding: 0;
@@ -78,8 +78,12 @@ html {
   align-items: center;
   justify-content: center;
   display: none;
+  font-size: 30px;
 }
 
+.operatorContainer,
+.equalsContainer p {
+}
 input:invalid {
   color: red;
 }

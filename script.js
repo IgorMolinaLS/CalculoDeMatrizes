@@ -95,6 +95,7 @@ function checkMatrixSizesCompatibility(matrixSizes, operator) {
   return areSizesCompatible;
 }
 
+// prettier-ignore
 function createMatrix(matrixRows, matrixColumns, id, classList = "matrixRowDiv") {
   let matrixContainer = document.querySelector(id);
 
@@ -149,9 +150,11 @@ function mountMatrix(matrixSizes, operator) {
   switch (operator) {
     case "+":
     case "-":
+      // prettier-ignore
       createMatrix(matrix1Rows, matrix1Columns, ".resultMatrix", "resultMatrixRowDiv");
       break;
     case "*":
+      // prettier-ignore
       createMatrix(matrix1Rows, matrix2Columns, ".resultMatrix", "resultMatrixRowDiv");
       break;
   }
@@ -166,7 +169,7 @@ function calculateMatrix() {
   let matrix2Container = document.querySelector(".matrix2Container");
   let matrix1Values = [];
   let matrix2Values = [];
-  
+
   matrix1Container.childNodes.forEach((row) => {
     let rowValues = [];
     row.childNodes.forEach((column) => {
@@ -183,13 +186,38 @@ function calculateMatrix() {
     matrix2Values.push(rowValues);
   });
 
-  if(document.querySelector("#operator").value == "+" || document.querySelector("#operator").value == "-"){
-    for (let i = 0; i < matrix1Values.length; i++) {
-      let row = document.querySelector(`.resultMatrix div:nth-child(${i+1})`);
-      for (let j = 0; j < matrix1Values[i].length; j++) {
-        let column = row.querySelector(`.resultMatrixRowDiv input:nth-child(${j+1})`)
-        column.value = Number(matrix1Values[i][j]) + Number(matrix2Values[i][j])
+  let operator = document.querySelector("#operator").value;
+
+  //TODO: Criar arquivo helper para chamar as funções addMatrix, subtractMatrix,
+  //multiplyMatrix e divideMatrix neste switch case
+  switch (operator) {
+    case "+":
+      for (let i = 0; i < matrix1Values.length; i++) {
+        let row = document.querySelector(
+          `.resultMatrix div:nth-child(${i + 1})`
+        );
+        for (let j = 0; j < matrix1Values[i].length; j++) {
+          let column = row.querySelector(
+            `.resultMatrixRowDiv input:nth-child(${j + 1})`
+          );
+          column.value =
+            Number(matrix1Values[i][j]) + Number(matrix2Values[i][j]);
+        }
       }
-    }
+      break;
+    case "-":
+      for (let i = 0; i < matrix1Values.length; i++) {
+        let row = document.querySelector(
+          `.resultMatrix div:nth-child(${i + 1})`
+        );
+        for (let j = 0; j < matrix1Values[i].length; j++) {
+          let column = row.querySelector(
+            `.resultMatrixRowDiv input:nth-child(${j + 1})`
+          );
+          column.value =
+            Number(matrix1Values[i][j]) - Number(matrix2Values[i][j]);
+        }
+      }
+      break;
   }
 }
