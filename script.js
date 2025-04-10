@@ -219,5 +219,28 @@ function calculateMatrix() {
         }
       }
       break;
+    case "*":
+      const numRowsMatrix1 = matrix1Values.length;
+      const numColsMatrix1 = matrix1Values[0].length;
+      const numColsMatrix2 = matrix2Values[0].length;
+
+      for (let firstMatrixRow = 0; firstMatrixRow < numRowsMatrix1; firstMatrixRow++) {
+        for (let secondMatrixColumn = 0; secondMatrixColumn < numColsMatrix2; secondMatrixColumn++) {
+          let mutiplicationSum = 0;
+          for (let firstMatrixColumn = 0; firstMatrixColumn < numColsMatrix1; firstMatrixColumn++) {
+            mutiplicationSum = mutiplicationSum + Number(matrix1Values[firstMatrixRow][firstMatrixColumn]) * Number(matrix2Values[firstMatrixColumn][secondMatrixColumn]);
+          }
+          let row = document.querySelector(
+            `.resultMatrix div:nth-child(${firstMatrixRow + 1})`
+          );
+          let column = row.querySelector(
+            `.resultMatrixRowDiv input:nth-child(${secondMatrixColumn + 1})`
+          );
+          column.value = mutiplicationSum;
+        }
+      }
+      break;
+    case "/":
+      break;
   }
 }
