@@ -13,27 +13,28 @@
           <label for="matrix1Size">Insira o tamanho da primeira matriz</label>
           <div class="matrixSizeContainer">
             <input
-              class="matrixInput"
-              type="text"
+              type="number"
+              onpaste="return false"
+              oninput="validateInput(this)"
               maxlength="1"
               name="matrixRowSize"
               id="matrix1Rows"
-              value="3"
+              value="6"
             />
             <input
-              class="matrixInput"
-              type="text"
+              type="number"
+              onpaste="return false"
+              oninput="validateInput(this)"
               maxlength="1"
               name="matrixColunmSize"
               id="matrix1Columns"
-              value="4"
+              value="6"
             />
           </div>
         </div>
         <div class="inputContainer">
           <label for="operator">Insira o operador</label>
           <input
-            class="matrixInput"
             type="text"
             name="operator"
             id="operator"
@@ -45,20 +46,22 @@
           <label for="matrix2Size">Insira o tamanho da segunda matriz</label>
           <div class="matrixSizeContainer">
             <input
-              class="matrixInput"
-              type="text"
+              type="number"
+              onpaste="return false"
+              oninput="validateInput(this)"
               maxlength="1"
               name="matrixRowSize"
               id="matrix2Rows"
-              value="3"
+              value="6"
             />
             <input
-              class="matrixInput"
-              type="text"
+              type="number"
+              onpaste="return false"
+              oninput="validateInput(this)"
               maxlength="1"
               name="matrixColunmSize"
               id="matrix2Columns"
-              value="4"
+              value="6"
             />
           </div>
         </div>
@@ -71,7 +74,7 @@
       <div class="matrix1Container"></div>
       <div class="operatorContainer"></div>
       <div class="matrix2Container"></div>
-      <button class="equalsContainer" id="equalsButton"><p>=</p></button>
+      <div class="equalsContainer"></div>
       <div class="resultMatrix" id="resultMatrix"></div>
     </div>
   </body>

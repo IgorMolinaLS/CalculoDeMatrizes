@@ -1,5 +1,8 @@
 let generateMatrixButton = document.querySelector("#generateMatrixButton");
-let generateResultButton = document.querySelector("#equalsButton");
+
+function validateInput(number) {
+  number.value = number.value.replace(/[^0-9]/g, "").slice(0, 1); // mantém apenas um número
+}
 
 generateMatrixButton.addEventListener("click", () => {
   let matrixSizes = getMatrixSizes();
@@ -55,7 +58,7 @@ function getOperator() {
 function checkMatrixSizes(matrixSizes) {
   let isSizeOk = true;
   for (let i = 0; i < matrixSizes.length; i++) {
-    if (matrixSizes[i] < 2 || matrixSizes[i] > 5) {
+    if (matrixSizes[i] < 2 || matrixSizes[i] > 6) {
       isSizeOk = false;
     }
   }
@@ -104,7 +107,9 @@ function createMatrix(matrixRows, matrixColumns, id, classList = "matrixRowDiv")
     newRow.classList.add(classList);
     for (let j = 0; j < matrixColumns; j++) {
       let newColumn = document.createElement("input");
-      newColumn.classList.add("matrixInput");
+      if (classList == "resultMatrixRowDiv") {
+        newColumn.readOnly = true
+      }
       newRow.append(newColumn);
       newColumn.value = j;
     }
@@ -127,14 +132,27 @@ function mountMatrix(matrixSizes, operator) {
 
   let operatorContainer = document.querySelector(".operatorContainer");
   let equalsContainer = document.querySelector(".equalsContainer");
-  if (operatorContainer.lastElementChild) {
+  if (operatorContainer.lastElementChild || equalsContainer.lastElementChild) {
     operatorContainer.removeChild(operatorContainer.lastElementChild);
+    equalsContainer.removeChild(equalsContainer.lastElementChild);
   }
-  const operatorValue = document.createElement("p");
-  operatorValue.innerHTML = operator;
-  operatorContainer.style.display = "flex";
-  equalsContainer.style.display = "flex";
+
+  const operatorValue = document.createElement("input");
+  operatorValue.value = operator;
+  operatorValue.readOnly = true;
   operatorContainer.append(operatorValue);
+
+  const equalsButton = document.createElement("button");
+  equalsButton.classList.add("equalsButton");
+  equalsButton.innerHTML = "=";
+  equalsButton.id = "equalsButton";
+  equalsContainer.append(equalsButton);
+
+  let generateResultButton = document.querySelector("#equalsButton");
+
+  generateResultButton.addEventListener("click", () => {
+    calculateMatrix();
+  });
 
   let matrix2Container = document.querySelector(".matrix2Container");
   while (matrix2Container.lastElementChild) {
