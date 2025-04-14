@@ -165,7 +165,17 @@ function mountMatrix(matrixSizes, operator) {
     resultMatrix.removeChild(resultMatrix.lastElementChild);
   }
 
-  createMatrix(matrix1Rows, matrix1Columns, ".resultMatrix", "resultMatrixRowDiv");
+  switch (operator) {
+    case "+":
+    case "-":
+      // prettier-ignore
+      createMatrix(matrix1Rows, matrix1Columns, ".resultMatrix", "resultMatrixRowDiv");
+      break;
+    case "*":
+      // prettier-ignore
+      createMatrix(matrix1Rows, matrix2Columns, ".resultMatrix", "resultMatrixRowDiv");
+      break;
+  }
 }
 
 generateResultButton.addEventListener("click", () => {
