@@ -94,6 +94,16 @@ function checkMatrixSizesCompatibility(matrixSizes, operator) {
         );
       }
       break;
+    case "/":
+      if (
+        matrixSizes[0] != matrixSizes[1] ||
+        matrixSizes[2] != matrixSizes[3] ||
+        matrixSizes[0] != matrixSizes[2]
+      ) {
+        areSizesCompatible = false;
+        alert("A matrizes precisam ser quadradas e iguais");
+      }
+      break;
   }
   return areSizesCompatible;
 }
@@ -175,6 +185,10 @@ function mountMatrix(matrixSizes, operator) {
       // prettier-ignore
       createMatrix(matrix1Rows, matrix2Columns, ".resultMatrix", "resultMatrixRowDiv");
       break;
+    case "/":
+      // prettier-ignore
+      createMatrix(matrix1Rows, matrix1Columns, ".resultMatrix", "resultMatrixRowDiv");
+      break;
   }
 }
 
@@ -210,55 +224,227 @@ function calculateMatrix() {
   //multiplyMatrix e divideMatrix neste switch case
   switch (operator) {
     case "+":
-      for (let i = 0; i < matrix1Values.length; i++) {
-        let row = document.querySelector(
-          `.resultMatrix div:nth-child(${i + 1})`
-        );
-        for (let j = 0; j < matrix1Values[i].length; j++) {
-          let column = row.querySelector(
-            `.resultMatrixRowDiv input:nth-child(${j + 1})`
-          );
-          column.value =
-            Number(matrix1Values[i][j]) + Number(matrix2Values[i][j]);
-        }
-      }
-      break;
-    case "-":
-      for (let i = 0; i < matrix1Values.length; i++) {
-        let row = document.querySelector(
-          `.resultMatrix div:nth-child(${i + 1})`
-        );
-        for (let j = 0; j < matrix1Values[i].length; j++) {
-          let column = row.querySelector(
-            `.resultMatrixRowDiv input:nth-child(${j + 1})`
-          );
-          column.value =
-            Number(matrix1Values[i][j]) - Number(matrix2Values[i][j]);
-        }
-      }
-      break;
-    case "*":
-      const numRowsMatrix1 = matrix1Values.length;
-      const numColsMatrix1 = matrix1Values[0].length;
-      const numColsMatrix2 = matrix2Values[0].length;
+      let sum = addMatrices(matrix1Values, matrix2Values);
 
-      for (let firstMatrixRow = 0; firstMatrixRow < numRowsMatrix1; firstMatrixRow++) {
-        for (let secondMatrixColumn = 0; secondMatrixColumn < numColsMatrix2; secondMatrixColumn++) {
-          let mutiplicationSum = 0;
-          for (let firstMatrixColumn = 0; firstMatrixColumn < numColsMatrix1; firstMatrixColumn++) {
-            mutiplicationSum = mutiplicationSum + Number(matrix1Values[firstMatrixRow][firstMatrixColumn]) * Number(matrix2Values[firstMatrixColumn][secondMatrixColumn]);
-          }
-          let row = document.querySelector(
-            `.resultMatrix div:nth-child(${firstMatrixRow + 1})`
-          );
+      for (let i = 0; i < matrix1Values.length; i++) {
+        let row = document.querySelector(
+          `.resultMatrix div:nth-child(${i + 1})`
+        );
+        for (let j = 0; j < matrix1Values[i].length; j++) {
           let column = row.querySelector(
-            `.resultMatrixRowDiv input:nth-child(${secondMatrixColumn + 1})`
+            `.resultMatrixRowDiv input:nth-child(${j + 1})`
           );
-          column.value = mutiplicationSum;
+          column.value = sum[i][j];
         }
       }
       break;
+      
+    case "-":
+      let sub = subtractMatrices(matrix1Values, matrix2Values);
+
+      for (let i = 0; i < matrix1Values.length; i++) {
+        let row = document.querySelector(
+          `.resultMatrix div:nth-child(${i + 1})`
+        );
+        for (let j = 0; j < matrix1Values[i].length; j++) {
+          let column = row.querySelector(
+            `.resultMatrixRowDiv input:nth-child(${j + 1})`
+          );
+          column.value = sub[i][j];
+        }
+      }
+      break;
+
+    case "*":
+      const rowsMatrix1 = matrix1Values.length;
+      const columnsMatrix2 = matrix2Values[0].length;
+
+      let multiplication = multiplyMatrices(matrix1Values, matrix2Values);
+
+      // prettier-ignore
+      for (let i = 0; i < rowsMatrix1; i++) {
+        for (let j = 0; j < columnsMatrix2; j++) {
+          let row = document.querySelector(
+            `.resultMatrix div:nth-child(${i + 1})`
+          );
+          let column = row.querySelector(
+            `.resultMatrixRowDiv input:nth-child(${j + 1})`
+          );
+          column.value = multiplication[i][j];
+        }
+      }
+      break;
+
     case "/":
+      matrix1 = [];
+      matrix2 = [];
+      for (let i = 0; i < matrix2Values.length; i++) {
+        matrix1[i] = [];
+        matrix2[i] = [];
+        
+        for (let j = 0; j < matrix2Values[i].length; j++) {
+          matrix1[i][j] = Number(matrix1Values[i][j]);
+          matrix2[i][j] = Number(matrix2Values[i][j]);
+        }
+      }
+
+      division = divideMatrices(matrix1, matrix2);
+      for (let i = 0; i < matrix1.length; i++) {
+        let row = document.querySelector(
+          `.resultMatrix div:nth-child(${i + 1})`
+        );
+        for (let j = 0; j < matrix1[i].length; j++) {
+          let column = row.querySelector(
+            `.resultMatrixRowDiv input:nth-child(${j + 1})`
+          );
+          column.value = division[i][j];
+        }
+      }
       break;
   }
+}
+
+function addMatrices(matrixA, matrixB){
+  const rows = matrixA.length;
+  const columns = matrixA[0].length;
+
+  const sub = Array.from({ length: rows }, () => Array(columns).fill(0));
+
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      sub[i][j] = Number(matrixA[i][j]) + Number(matrixB[i][j]);    
+    }
+  }
+  return sub;
+}
+
+function subtractMatrices(matrixA, matrixB){
+  const rows = matrixA.length;
+  const columns = matrixA[0].length;
+
+  const sum = Array.from({ length: rows }, () => Array(columns).fill(0));
+
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      sum[i][j] = Number(matrixA[i][j]) - Number(matrixB[i][j]);    
+    }
+  }
+  return sum;
+}
+
+function multiplyMatrices(matrixA, matrixB) {
+  const rowsA = matrixA.length;
+  const columnsA = matrixA[0].length;
+  const columnsB = matrixB[0].length;
+
+  const result = Array.from({ length: rowsA }, () => Array(columnsB).fill(0));
+
+  for (let i = 0; i < rowsA; i++) {
+    for (let j = 0; j < columnsB; j++) {
+      for (let k = 0; k < columnsA; k++) {
+        result[i][j] += Number(matrixA[i][k]) * Number(matrixB[k][j]);
+      }
+    }
+  }
+
+  return result;
+}
+
+function divideMatrices(matrixA, matrixB){
+
+  determinant = calculateDeterminant(matrixB);
+  minorMatrix = calculateMinorMatrix(matrixB);
+  cofactors = calculateCofactors(minorMatrix);
+  adjugate = calculateAdjugate(cofactors);
+  inverse = calculateInverse(adjugate, determinant);
+  division = multiplyMatrices(matrixA, inverse);
+
+  return division;
+}
+
+function calculateDeterminant(matrix) {
+  const n = matrix.length;
+
+  if (n === 1) {
+    return matrix[0][0];
+  }
+
+  if (n === 2) {
+    return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+  }
+
+  let determinant = 0;
+  for (let col = 0; col < n; col++) {
+    const subMatrix = matrix.slice(1).map(row => row.filter((_, i) => i !== col));
+    const cofactor = ((col % 2 === 0) ? 1 : -1) * matrix[0][col];
+    determinant += cofactor * calculateDeterminant(subMatrix);
+  }
+
+  return determinant;
+}
+
+function calculateMinorMatrix(matrix) {
+  const n = matrix.length;
+
+  const minorMatrix = [];
+
+  for (let i = 0; i < n; i++) {
+    minorMatrix[i] = [];
+    for (let j = 0; j < n; j++) {
+      const subMatrix = matrix
+        .filter((_, row) => row !== i)
+        .map(row => row.filter((_, column) => column !== j));
+
+      minorMatrix[i][j] = calculateDeterminant(subMatrix);
+    }
+  }
+
+  return minorMatrix;
+}
+
+function calculateCofactors(matrix) {
+  const n = matrix.length;
+
+  const cofactors = [];
+
+  for (let i = 0; i < n; i++) {
+    cofactors[i] = [];
+    for (let j = 0; j < n; j++) {
+      const sign = ((i + j) % 2 === 0) ? 1 : -1;
+      cofactors[i][j] = sign * matrix[i][j];
+    }
+  }
+  return cofactors;
+}
+
+function calculateAdjugate(matrix){
+  const n = matrix.length;
+  const adjugate = [];
+
+  for (let i = 0; i < n; i++) {
+    adjugate[i] = [];
+    for (let j = 0; j < n; j++) {
+      adjugate[i][j] = matrix[j][i];
+    }
+  }
+
+  return adjugate;
+}
+
+function calculateInverse(matrix, determinant){
+  const n = matrix.length;
+  const inverse = [];
+
+  if(determinant == 0){
+    alert("Erro! Matriz não possui inverse (determinante = 0)");
+  }
+
+  for (let i = 0; i < n; i++) {
+    inverse[i] = [];
+    for (let j = 0; j < n; j++) {
+      inverse[i][j] = matrix[i][j]/determinant;
+    }
+  }
+
+  return inverse;
 }
