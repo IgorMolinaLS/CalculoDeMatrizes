@@ -31,7 +31,4 @@ https://igor-molina-org.github.io/CalculoDeMatrizes/
 
 Este projeto foi desenvolvido por:
 
-Andre Lui
-Igor Molina
-Leonardo Oziro
-Thiago Correia
+André Lui, Igor Molina, Leonardo Oziro e Thiago Correia
